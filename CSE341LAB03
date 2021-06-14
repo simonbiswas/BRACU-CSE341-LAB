@@ -1,0 +1,300 @@
+; You may customize this and other start-up templates; 
+; The location of this template is c:\emu8086\inc\0_com_template.txt
+
+org 100h
+
+.DATA
+M1 DW 0AH,0DH,"ooo$"
+M2 DW 0AH,0DH,"e$
+M3 DW 0AH,0DH,"GIVEN NUMBER IS ODD$"
+M4 DW 0AH,0DH,"GIVEN NUMBER IS EVEN$"
+M5 DW 0AH,0DH,"THE ALPHABET IS VOWEL$"
+M6 DW 0AH,0DH,"THE ALPHABET IS CONSONANT$"
+M8 DW 0AH,0DH,"DIVIDED BY 5$"
+M9 DW 0AH,0DH,"DIVIDED BY 11$"
+M10 DW 0AH,0DH,"SATURDAY$"
+M11 DW 0AH,0DH,"SUNDAY$"
+M12 DW 0AH,0DH,"MONDAY$"
+M13 DW 0AH,0DH,"TUSEDAY$"
+M14 DW 0AH,0DH,"WEDNESDAY$"
+M15 DW 0AH,0DH,"THURSDAY$"
+M16 DW 0AH,0DH,"FRIDAY$"
+NUM1 DB 5
+NUM2 DB 7
+NUM3 DB 9
+
+.CODE    
+MAIN PROC
+;TASK 01: Take a number in AX, and if it"s a negative number, replace it by 5.
+MAIN PROC
+    MOV AH,1
+    INT 21H
+    CMP AL,0
+    JNL END_IF
+    MOV AL,5
+  END_IF:
+;TASK 02: Suppose AL and BL contain extended ASCII characters. Display the one that comes first in the character sequence.
+
+ 
+    MOV AH,1
+    INT 21H
+    MOV BL,AL
+    MOV AH,1
+    INT 21H
+    CMP AL,BL
+    JNL FUN
+    MOV CL,AL
+    MOV AH,2
+    MOV DL,CL
+    INT 21H
+    JMP END_     
+    FUN:
+        MOV AH,2
+        MOV DL,BL
+        INT 21H
+    END_:
+
+;TASK 03: If AX contains a negative number, put -1 in BX; if AX contains 0, put 0 In BX; if AX contains a positive number, put 1 in BX.
+         MOV AX,5
+         CMP AX,0
+         JE FUN
+         JL FUN2
+         JGE FUN3
+         FUN:
+             MOV BX,0
+             JMP END_IF
+         FUN2:
+              MOV BX,-1
+              JMP END_IF
+         FUN3:
+              MOV BX,1
+              JMP END_IF 
+         END_IF:
+
+;TASK 4:If AL contains 1 or 3, display “o”; if AL contains 2 or 4 display "e".
+         MOV AL,2
+         CMP AL,1
+         JE FUN
+         CMP AL,3
+         JE FUN
+         CMP AL,2
+         JE FUN2
+         CMP AL,4
+         JE FUN2
+         JMP END_IF
+         FUN:
+             LEA DX,M1
+             MOV AH,9
+             INT 21H
+             JMP END_IF
+         FUN2:
+              LEA DX,M2
+              MOV AH,9
+              INT 21H
+              JMP END_IF
+         END_IF:
+             
+;TASK 05:Read a character, and if it's an uppercase letter, display it.
+          MOV AH,1              
+          INT 21H
+
+          CMP AL,'A'             
+          JB ELSE_                
+          CMP AL,'Z'  
+          JA ELSE_                
+
+          MOV AH,2               
+          MOV DL,AL
+          INT 21H
+          JMP ELSE_          
+                           
+          ELSE_:  
+            
+;TASK 06: Read a character. If it's "y" or "Y", display it; otherwise, terminate the program.
+         MOV AH,1
+         INT 21H
+         MOV BL,AL
+         CMP BL,"y"
+         JE FUN
+         CMP BL,"Y"
+         JE FUN 
+         JMP END_IF
+         FUN:
+             MOV DL,BL
+             MOV AH,2
+             INT 21H
+             JMP END_IF
+
+         END_IF: 
+       
+;TASK 07:Write an assembly program to check whether a number is even or odd.
+         MOV AH,1
+         INT 21H
+         MOV AH,0
+         MOV DL,2
+         DIV DL
+         CMP AH,0
+         JE EVEN
+         JG ODD
+         JL ODD
+         JMP END_IF
+         ODD:
+            LEA DX,M3
+            MOV AH,9
+            INT 21H
+            JMP END_IF
+         EVEN:
+              LEA DX,M4
+              MOV AH,9
+              INT 21H
+              JMP END_IF
+         END_IF:
+
+;TASK 08:Write a program to input any alphabet and check whether it is vowel or consonant.
+         
+         
+          MOV AH,1
+          INT 21H
+          CMP AL,'A'
+          JE VOWEL
+          CMP AL,'E'
+          JE VOWEL
+          CMP AL,'I'
+          JE VOWEL
+          CMP AL,'O'
+          JE VOWEL
+          CMP AL,'U'
+          JE VOWEL
+          CMP AL,'a'
+          JE VOWEL
+          CMP AL,'e'
+          JE VOWEL
+          CMP AL,'i'
+          JE VOWEL
+          CMP AL,'o'
+          JE VOWEL
+          CMP AL,'u'
+          JE VOWEL
+          LEA DX,M6
+          MOV AH,9
+          INT 21H
+          JMP END_IF
+  
+          VOWEL:
+            LEA DX,M5
+            MOV AH,9
+            INT 21H 
+            JMP END_IF
+          END_IF:
+
+;TASK 09: Write a program to check whether a number is divisible by 5 and 11 or not.
+         MOV AH,1
+         INT 21H
+         MOV BL,AL 
+         MOV DH,BL
+         MOV CH,5
+         DIV CH
+         CMP DH,0
+         JE FUN
+         MOV AH,AL
+         MOV CL,11
+         DIV CL
+         CMP AH,0
+         JE FUN2
+         JMP EXIT
+         FUN:
+             LEA DX,M8
+             MOV AH,9
+             INT 21H
+             JMP EXIT
+         FUN2:
+              LEA DX,M9
+              MOV AH,9
+              INT 21H
+              JMP EXIT
+         EXIT:
+;TASK 11: Write a program that takes as input all sides of a triangle and check whether triangle is valid or not. If the sides form a triangle, print “Y”, otherwise print “N”.
+
+    MOV BL,NUM1
+    ADD BL,NUM2
+    CMP BL,NUM3
+    JLE FUN
+    MOV CL,NUM2
+    ADD CL,NUM3
+    CMP CL,NUM1
+    JLE FUN
+    MOV DL,NUM3
+    ADD DL,NUM1
+    CMP DL,NUM2
+    JLE DO
+    FUN:
+        LEA DX,M11
+        MOV AH,9
+        INT 21H
+        JMP EXIT_IF
+    DO:
+        LEA DX,M10
+        MOV AH,9
+        INT 21H
+        JMP EXIT_IF
+         
+ ;TASK 13: Write a case to print the name of the day of the week. Consider the first day of the week   is Saturday.
+         MOV AH,1
+         INT 21H
+         CMP AL,1
+         JE FUN
+         CMP AL,2
+         JE FUN2
+         CMP AL,3
+         JE FUN3
+         CMP AL,4
+         JE FUN4
+         CMP AL,5
+         JE FUN5
+         CMP AL,6
+         JE FUN6
+         CMP AL,7
+         JE FUN7 
+         ;JMP END_IF
+         FUN:
+         LEA DX,M10
+         MOV AH,9
+         INT 21H
+         JMP END_IF
+         FUN2:
+         LEA DX,M11
+         MOV AH,9
+         INT 21H
+         JMP END_IF
+             
+             
+         FUN3:
+         LEA DX,M12
+         MOV AH,9
+         INT 21H
+         JMP END_IF
+         FUN4:
+         LEA DX,M13
+         MOV AH,9
+         INT 21H
+         JMP END_IF 
+         FUN5:
+         LEA DX,M14
+         MOV AH,9
+         INT 21H
+         JMP END_IF
+         FUN6:
+         LEA DX,M15
+         MOV AH,9
+         INT 21H
+         JMP END_IF
+         FUN7:
+         LEA DX,M16
+         MOV AH,9
+         INT 21H
+         JMP END_IF 
+             
+         END_IF:        
+    
+        
+
