@@ -1,0 +1,188 @@
+.DATA
+M1 DW 0AH,0DH,"CHARACTER: $"
+M2 DW 0AH,0DH, "ENTER A HEX DIGIT:$" 
+M3 DW 0AH,0DH,"ILLEGAL CHARACTER - ENTER 0 .. 9 OR A .. F:$"
+M4 DW 0AH,0DH,"IN DECIMAL IT IS: $" 
+M5  DW 0AH,0DH,"DO YOU WANT TO DO IT AGAIN?: $" 
+.CODE
+ MAIN PROC
+;TASK 01:Write a count-controlled loop to display a row of 80 stars.    
+    MOV CX,80
+    MOV AH,2
+    MOV DL,'*'
+    TOP:
+    INT 21H
+    LOOP TOP
+;TASK 02 : Write a sequence of instructions to do each of the following: 
+;a. Put the sum of 1 + 4 + 7+ .. + 148 in AX. 
+    MOV DX,1H
+    START:
+    CMP DX,94H
+    JG END_IF 
+    ADD AX,DX
+    INC DX
+    INC DX
+    INC DX   
+    JMP START 
+    END_IF:
+;b. Put the sum 100 + 95 + 90 + ... + 5 in AX.
+    MOV DX,64H
+    START:
+    CMP DX,5H
+    JL END_IF 
+    ADD AX,DX
+    DEC DX
+    DEC DX
+    DEC DX
+    DEC DX
+    DEC DX   
+    JMP START 
+    END_IF:
+    
+;TASK 03:Read a five character password and overprint it by executing a carriage return and displaying five X's. You need not store the input characters anywhere. 
+    MOV CX,5
+    START:
+         LEA DX,M1
+         MOV AH,9
+         INT 21H
+
+         MOV AH,1
+         INT 21H  
+         MOV DL,AL
+         MOV AH,2
+         INT 21H
+         
+         MOV DL,0DH
+         MOV AH,2
+         INT 21H
+         LOOP START
+         
+;TASK 04:The following algorithm may be used to carry out multiplication of two positive numbers
+;M and N by repeated addition.
+;Initialize product to 0
+;REPEAT
+;add M to product
+;decrement N
+;UNTIL N equals 0
+;Write a sequence of instructions to multiply AX by BX, and put the product in CX. You
+;may ignore the possibility of overflow.
+    MOV AX,10H
+    MOV BX,5H 
+    MOV DX,0
+    REPEAT:
+    ADD DX,AX
+    DEC BX
+    CMP BX,0
+    JLE END_IF
+    JG REPEAT
+    END_IF:
+    MOV CX,DX
+
+;TASK 05:Write a program to display the extended ASCII characters (ASCII codes 80h to FFh).
+;Display 10 characters per line, separated by blanks. Stop after the extended characters
+;have been displayed once.
+    MOV BL,80H
+    MOV CL,0
+    FUN:
+        CMP CL,10
+        JE FUN2
+     
+        INC CL
+     
+        MOV AH,2
+        MOV DL,BL
+        INT 21H
+        INC BL
+     
+        CMP BL,0FFH
+        JE END_IF
+     
+        JMP FUN
+    FUN2:
+        MOV AH,2
+        MOV DL,0AH
+        INT 21H
+        MOV DL,0DH
+        INT 21H
+        MOV CL,0
+        JMP FUN
+    END_IF:
+
+
+;TASK 06: Write a program that will prompt the user to enter a hex digit character ("0" ... "9" or "A"
+;... "F"), display it on the next line in decimal, and ask the user if he or she wants to do it
+;again. If the user types "y" or "Y", the program repeats; If the user types anything else,
+;the program terminates. If the user enters an illegal character, prompt the user to try again
+;Sample execution:
+;ENTER A HEX DIGIT: 9
+;IN DECIMAL IT IS 9
+;DO YOU WANT TO DO IT AGAIN? y
+;ENTER A HEX DIGIT: c
+;ILLEGAL CHARACTER - ENTER 0 .. 9 OR A .. F: C
+;IN DECIMAL IT IS 12
+;DO YOU WANT TO DO IT AGAIN? N
+
+ 
+    FUN:
+        MOV AH,9
+        LEA DX,M2
+        INT 21H     
+        MOV AH,1
+        INT 21H
+        MOV BL,AL
+        JMP FUN5              
+    FUN2:
+        MOV AH,9
+        LEA DX,M5
+        INT 21H
+        MOV AH,1
+        INT 21H
+        MOV BH,AL
+        MOV AH,2
+        MOV DL,0AH
+        INT 21H
+        MOV DL,0DH
+        INT 21H         
+        CMP BH,'Y'
+        JE FUN
+        CMP BH,'y'
+        JE FUN
+        JMP END_IF
+    FUN3:
+        MOV AH,9
+        LEA DX,M4
+        INT 21H
+        MOV AH,2
+        MOV DL,BL
+        INT 21H     
+        JMP FUN2
+    FUN4:
+        MOV AH,9
+        LEA DX,M3
+        INT 21H 
+        MOV AH,1
+        INT 21H
+        MOV BL,AL
+        JMP FUN5  
+     FUN5:    
+        CMP BL,30H
+        JL  FUN4     
+        CMP BL,46H
+        JG  FUN4     
+        CMP BL,39H
+        JLE FUN3
+        MOV AH,9
+        LEA DX,M4
+        INT 21H    
+        SUB BL,11H     
+        MOV AH,2
+        MOV DL,31H
+        INT 21H
+        MOV DL,BL
+        INT 21H 
+        JMP FUN2    
+    END_IF:
+                  
+
+
+
