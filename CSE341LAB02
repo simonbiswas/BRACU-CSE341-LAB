@@ -1,0 +1,231 @@
+
+; You may customize this and other start-up templates; 
+; The location of this template is c:\emu8086\inc\0_com_template.txt
+
+org 100h
+.MODEL SMALL
+.DATA
+DIS DW "Please insert a character:$"
+DIS2 DW 0AH,0DH,"Please enter number:$"
+DIS3 DW 0AH,0DH"Enter an uppercase letter:$"
+DIS4 DW 0AH,0DH,"THE SUM OF",9,"$"
+DIS5 DW "AND",9
+DIS6 DW "IS",9,"$"  
+INPUT DW 0AH,0DH,"Your output is:$"
+DIS7 DW "ENTER A CHARACTER FROM A-F:$"
+DIS8 DW 0DH,"*********",0AH,0DH,"$"
+.CODE
+MAIN PROC
+    ;TASK 01: Take a character input and display it. Display the message "Please insert a character: when taking an input."
+    LEA DX,DIS
+    MOV AH,9
+    INT 21H
+    MOV AH,1
+    INT 21H
+    MOV BL,AL
+    LEA DX,INPUT
+    MOV AH,9
+    INT 21H 
+    MOV DL,BL
+    MOV AH,2
+    INT 21H
+
+    ;TASK 02: Perform addition/subtraction/division/multiplication by taking inputs from the user.
+    LEA DX,DIS2
+    MOV AH,9
+    INT 21H
+    MOV AH,1
+    INT 21H 
+    MOV BH,AL
+    LEA DX,DIS2
+    MOV AH,9
+    INT 21H
+    MOV AH,1
+    INT 21H
+    MOV BL,AL
+    ADD BL,BH
+    LEA DX,INPUT
+    MOV AH,9
+    INT 21H 
+    MOV DL,BL
+    MOV AH,2
+    INT 21H
+    
+    ;TASK 03 :Write instructions to do the following.
+    ;a. Read a character, and display it at the next position on the same line.
+    LEA DX,DIS
+    MOV AH,9
+    INT 21H 
+    MOV AH,1
+    INT 21H
+    MOV DL,AL
+    MOV AH,2
+    INT 21H
+    
+    ;b. Read an uppercase letter (omit error checking), and display it at the next position on  the same line in lower case.
+    LEA DX,DIS3
+    MOV AH,9
+    INT 21H
+    MOV AH,1
+    INT 21H
+    MOV BL,AL
+    ADD BL,20H
+    MOV DL,BL
+    MOV AH,2
+    INT 21H
+
+        
+    ;TASK 04 :Read an uppercase letter (omit error checking), and display it at the next position on the next line in lower case.
+    LEA DX,DIS3
+    MOV AH,9
+    INT 21H
+    MOV AH,1
+    INT 21H
+    MOV BL,AL
+    ADD BL,20H
+    LEA DX,INPUT
+    MOV AH,9
+    INT 21H
+    MOV DL,BL
+    MOV AH,2
+    INT 21H
+   
+    ;TASK 05:Write a program to:
+    ;(a) display a "?"  
+    MOV AH,1
+    INT 21H
+    MOV AH,2
+    MOV DL,'?'
+    INT 21H
+
+    ;(b) read two decimal digits whose sum is less than 10,
+    LEA DX,DIS
+    MOV AH,9
+    INT 21H
+    MOV AH,1
+    INT 21H
+    MOV BH,AL
+    LEA DX,DIS
+    MOV AH,9
+    INT 21H
+    MOV AH,1
+    INT 21H
+    MOV BL,AL
+      
+    ;display them and their sum on the next line, with an appropriate message.
+       
+    ADD BH,BL
+    LEA DX,DIS4
+    MOV AH,9
+    INT 21H
+    LEA DX,DIS5
+    MOV AH,9
+    INT 21H
+    LEA DX,DIS6
+    MOV AH,9
+    INT 21H
+    MOV DL,BH
+    MOV AH,2
+    INT 21H 
+
+    ;TASK 07:Write a program to read one of the hex digits A-F, and display it on the next line in decimal. Sample execution: ENTER A HEX DIGIT: C
+    IN DECIMAL IT IS 12
+
+    LEA DX, DIS7            
+    MOV AH, 9
+    INT 21H
+    MOV AH, 1                    
+    INT 21H
+    MOV BL, AL                   
+    LEA DX, INPUT             
+    MOV AH, 9
+    INT 21H
+    MOV AH, 2                    
+    MOV DL, 31H
+    INT 21H
+    SUB BL, 11H                  
+    MOV DL, BL                   
+    INT 21H
+
+    ;TASK 08:Write a program to display a 10 x 10 solid box of asterisks.HINT: Declare a string in the data segment that specifies the box, and display it with INT 2lh, function 9h
+
+    LEA DX,DIS8               
+    MOV AH,9                                           
+    INT 21H
+    INT 21H                      
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    INT 21H
+    
+    ;TASk 09:ADD AL, BL. Where AL contains 80h, BL contains 80h. Identify the status of different status flags.
+    MOV AL,80H
+    MOV BL,80H
+    ADD AL,BL  
+
+    ;=== unsigned ===
+    ;below	(CF=1)
+    ;not above	(CF=1 or ZF=1)
+
+    ;=== signed ===
+    ;less	(SF<>OF)
+    ;not greater	(SF<>OF or ZF=1)
+
+    ;equal	(ZF=1)
+    ;positive	(SF=0)
+    ;overflow	(OF=1)
+    ;parity even	(PF=1)
+    ;not aux carry	(AF=0)
+    ;hw-int enabled 	(IF=1)
+    ;forward dir 	(DF=0)  
+
+    ;TASK 10:Suppose that AX and BX both contain positive numbers and ADD AX, BX is executed.Show that there is a carry into the msb but no carry out of the msb if, and only if, signed over
+    ;flow occurs.
+
+    MOV AX, 30H
+    MOV BX, 60H
+    ADD AX,BX
+    
+    ;=== unsigned ===
+    ;not below	(CF=0)
+    ;above	(CF=0 and ZF=0)
+
+    ;=== signed ===
+    ;not less	(SF=OF)
+    ;greater	(SF=OF and ZF=0)
+
+    ;not equal	(ZF=0)
+    ;positive	(SF=0)
+    ;no overflow	(OF=0)
+    ;parity even	(PF=1)
+    ;not aux carry	(AF=0)
+    ;hw-int enabled 	(IF=1)
+    ;forward dir 	(DF=0)
+
+
+     ;TASK 11:Suppose AX and BX both contain negative numbers, and ADD AX,BX is executed.Show that there is a carry out of the msb but no carry into the msb if, and only if, signed overflow occurs.
+     MOV AX,-30H
+     MOV BX,-20H
+     ADD AX,BX
+
+     ;=== unsigned ===
+     ;below	(CF=1)
+     ;not above	(CF=1 or ZF=1)
+
+     ;=== signed ===
+     ;less	(SF<>OF)
+     ;not greater	(SF<>OF or ZF=1)
+
+     ;not equal	(ZF=0)
+     ;negative	(SF=1)
+     ;no overflow	(OF=0)
+     ;parity odd 	(PF=0)
+     ;not aux carry	(AF=0)
+     ;hw-int enabled 	(IF=1)
+     ;forward dir 	(DF=0)
+
+
