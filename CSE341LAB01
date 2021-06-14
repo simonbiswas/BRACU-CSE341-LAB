@@ -1,0 +1,171 @@
+
+; You may customize this and other start-up templates; 
+; The location of this template is c:\emu8086\inc\0_com_template.txt
+
+org 100h
+.DATA  
+A DW 5
+B DW 6
+C DW 7
+X DW 15
+Y DW 20
+Z DW 25   
+CONS EQU 50
+
+.CODE
+MAIN PROC 
+    ;TASK 01:Take input in the register AX, and then move it to BX using the MOV instruction.
+    MOV AX,25
+    MOV BX,AX
+     
+    ;TASK 02:Swap two numbers, using a maximum of 3 registers.
+    MOV AX,35
+    MOV BX,40
+    MOV DX,AX
+    MOV AX,BX
+    MOV BX,DX       
+ 
+    ;TASK 03: Add two numbers using two registers.     
+    MOV AX,65
+    MOV BX,16
+    ADD AX,BX
+            
+    ;TASK 04: Subtract two numbers using two registers. Do you always get the correct answer? What happens when you subtract larger number from the smaller one?
+    MOV AX,27
+    MOV BX,23
+    SUB AX,BX
+   
+    ;TASK 05:Swap two numbers using ADD/SUB instructions only.
+    MOV AX,50
+    MOV BX,60
+    ADD DX,AX
+    ADD AX,BX
+    ADD BX,DX
+    
+    ;TASK 06:Perform the following arithmetic instructions. A, B, C are three variables to be declared beforehand 
+    ;1. A = B - A
+    MOV AX,A
+    SUB B,AX
+    MOV BX,B
+    MOV A,BX
+    ;2. A = -(A + 1)
+    MOV AX,A
+    NEG AX
+    ADD AX,-1
+    MOV A,AX
+    ;3. C = A + (B + 1); use inc
+    INC B
+    MOV AX,A
+    ADD AX,B
+    MOV C,AX
+    ;4. A = B - (A - 1); use dec
+    DEC A
+    MOV AX,B
+    SUB AX,A
+    MOV A,AX  
+    
+    ;TASK 07: Perform the following arithmetic operations
+    ; 1. X * Y  
+    MOV AX, X
+    MOV BX, Y
+    MUL BX
+    ;2. X / Y
+    MOV AX,X
+    MOV BX,Y
+    DIV BX
+    ;3. X * Y / Z
+    MOV AX,Y
+    MOV BX,Z
+    DIV BX
+    MOV DX,BX
+    MOV CX,X
+    MUL CX
+    
+    ;TASK 08:1. 236DF * AF
+    ;NOT POSSIBLE 
+    
+    ;2. 8A32F4D5 / C9A5
+    ;MOV DX,8A32H
+   ; MOV AL,F4D5H
+   ; MOV BX, C9A5H
+    ;DIV BX
+    
+    ; CA92 * BAF9
+    ;MOV AX,CA92
+    ;MOV BX,BAF9
+    ;MUL BX 
+    
+    
+    ;TASK 09:Write two examples for each combination of registers possible for the 'mov' instruction.
+    ;GENERAL REGISTER
+    MOV AX,10
+    MOV BX,AX ;GENERAL
+    
+    MOV AX,20
+    MOV DS,AX ; SEGMENT
+    
+    MOV AX,X ;MEMORY LOCATION
+    
+    ;SEGMENT REGISTER
+    MOV AX,20
+    MOV DS,AX ;GENERAL
+    
+    MOV DS,X  ;MEMORY
+    
+    ;MEMORY LOCATION
+    MOV AX,30
+    MOV X,AX  ;GENERAL
+    
+    MOV DS,X;SEGMENT
+    
+    ;CONSTANT
+    MOV AX,30
+    MOV CONS,AX;GENERAL
+    
+    ;TASK 10: Write two examples for each combination of registers possible for the 'add' and 'sub'  instructions.
+    ;GENERAL REGISTER
+    MOV AX,90
+    MOV BX,80
+    ADD AX,BX
+    
+    MOV AX,73
+    MOV BX,20
+    SUB AX,BX 
+    
+    
+    MOV AX,10
+    ADD AX,X;MEMORY
+    
+    MOV AX,25
+    SUB AX,X
+    
+    ;MEMORY
+    MOV AX,50
+    ADD X,AX
+    
+    MOV AX,25
+    SUB X,AX
+    
+    ;CONSTANT
+    MOV AX,20
+    ADD AX,CONS
+    
+    MOV AX,15
+    SUB AX,CONS
+    
+
+    
+    
+    
+
+    
+    
+     
+    
+                          
+    
+
+
+
+
+
