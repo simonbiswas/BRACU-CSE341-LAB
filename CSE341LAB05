@@ -1,0 +1,185 @@
+.model small
+ 
+.stack 100h
+
+.data 
+
+arr db 5 dup(0)
+message db 'Enter 5 numbers$'
+
+
+.code
+;task02:Take an array of size 5, then taking input from the user, sort the array in the ascending
+;order. 
+main proc   
+mov ax,@data 
+mov ds,ax 
+lea dx,message
+mov ah,9
+int 21h
+mov ah,2
+mov dl,0Dh 
+int 21h 
+mov dl,0Ah 
+int 21h 
+mov si,0
+mov ah,1
+mov cx,5
+fun: 
+int 21H
+mov arr[si],al
+inc si
+loop fun
+mov dl,0dh
+mov ah,2
+int 21h
+mov dl,0ah
+mov ah,2
+int 21h 
+mov dl,0
+mov cl,4
+fun2: 
+mov si,0
+mov ch,4
+fun3: 
+mov al,arr[si]
+inc si
+cmp al,arr[si]
+jc fun4 
+xchg al,arr[si]
+dec si
+xchg al,arr[si]
+fun4:
+dec ch
+cmp ch,dl
+jg fun3 
+dec cl
+cmp cl,dl
+jg fun2 
+mov ah,2
+mov si,0
+mov cx,5
+run: 
+mov dl,arr[si]
+int 21h
+inc si
+loop run
+
+_end:
+main endp
+    end main 
+
+
+
+
+
+.MODEL SMALL
+ 
+.STACK 100H
+
+.DATA 
+
+arr db ? 
+length dw 3  
+m1 db 'The maximum number is: $' 
+m2 db 'Enter the numbers:$'
+
+
+
+ .code
+main proc
+;task 03:Take three inputs from the user and find the maximum of the three numbers.
+mov ax,@data 
+mov ds,ax 
+    lea dx,m2
+    mov ah,9    
+    int 21h    
+    mov dl,0dh
+    mov ah,2
+    int 21h
+    mov dl,0ah,
+    mov ah,2
+    int 21h 
+    mov cx,length
+    mov ah,1
+    mov si,0
+    fun:
+    int 21h
+    mov arr[si],al
+    add si,1
+    loop fun
+    mov si,0
+    mov al,arr[si]
+    mov bl,arr[si+1]
+    cmp al,bl
+    jg fun2
+    jl   fun3
+    fun2: 
+    mov si,0
+    mov al,arr[si]
+    mov cl,arr[si+2]
+    cmp al,cl
+    jg runal
+    jl runcl
+    jmp end
+    fun3:
+    mov si,1
+    mov bl,arr[si]
+    mov cl,arr[si+1]
+    cmp bl,cl
+    jg runbl
+    jl runcl
+    jmp end          
+    runal:
+    mov ah,2
+    mov dl,10
+    int 21h
+    mov dl,13
+    int 21h
+    lea dx,m1
+    mov ah,9 
+    int 21h
+    mov si,0
+    mov ah,2
+    mov dl,arr[si]
+    int 21h
+    jmp end    
+    runbl:
+    mov ah,2
+    mov dl,10
+    int 21h
+    mov dl,13
+    int 21h
+    lea dx,m1
+    mov ah,9 
+    int 21h
+    mov si,1
+    mov ah,2
+    mov dl,arr[si]
+    int 21h
+    jmp end
+    runcl:       
+    mov ah,2
+    mov dl,10
+    int 21h
+    mov dl,13
+    int 21h
+    lea dx,m1
+    mov ah,9 
+    int 21h
+    mov si,2
+    mov ah,2
+    mov dl,arr[si]
+    int 21h
+    jmp end
+    end:       
+            
+           
+  
+     
+
+               
+
+ 
+
+   
